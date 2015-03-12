@@ -15,40 +15,69 @@ function buildDeck($suits, $cards) {
   		$deck[count($deck)] = $c.$s;
   	}
   }
-  $count = count($deck);
+  $count = count($deck) - 1;
   while ($count > 0){
-  	echo count($deck)."\n";
   	$rand = rand(0, $count);
-  	echo $rand."\n";
   	$deck_shuffled[count($deck_shuffled)] = $deck[$rand];
-  	unset($deck[$rand]);
+  	array_splice($deck, 1, 1);
   	$count--;
   }
-  // echo count($deck)
   return $deck_shuffled;
 }
 // determine if a card is an ace
 // return true for ace, false for anything else
 function cardIsAce($card) {
-  // todo
+  if ($card[1] == 'A'){
+  	return true;
+  }
+  else{
+  	return false;
+  }
 }
 // determine the value of an individual card (string)
 // aces are worth 11
 // face cards are worth 10
 // numeric cards are worth their value
 function getCardValue($card) {
-  // todo
+  $val = $card[0];
+  if (is_numeric($val)){
+  	return (int)$val;
+  }
+  elseif($val != 'A'){
+  	return 10;
+  }
+  else{
+  	return 11;
+  }
 }
 // get total value for a hand of cards
 // don't forget to factor in aces
 // aces can be 1 or 11 (make them 1 if total value is over 21)
 function getHandTotal($hand) {
-  // todo
+	$tot = 0;
+	$numAces = 0;
+  foreach($hand as $card){
+  	$tot += getCardValue($card);
+  	if (getCardValue($card) == 11){
+  		$numAces++;
+  	}
+  }
+  if ($tot <= 21){
+  	return $tot;
+  }
+  else{
+  	while ($tot > 21 && $numAces > 0){
+  		$tot -= 11;
+  		$numAces--;
+  	}
+  	return $tot;
+  }
 }
 // draw a card from the deck into a hand
 // pass by reference (both hand and deck passed in are modified)
 function drawCard(&$hand, &$deck) {
-  // todo
+ 	$hand[count($hand)] = $deck[0];
+ 	array_splice($deck, -1, 0);
 }
 // print out a hand of cards
 // name is the name of the player
@@ -58,10 +87,23 @@ function drawCard(&$hand, &$deck) {
 // or:
 // Player: [J D] [2 D] Total: 12
 function echoHand($hand, $name, $hidden = false) {
-  // todo
+	$hide = 0;
+	echo "{$name}: ";
+  foreach ($hand as $card) {
+  	$cardStr = "[{$card[0]} {$card[1]}] ";
+  	if ($hidden && $hide != 0){
+  		echo $cardStr;
+  	}
+  	else{
+  		echo "[???] ";
+  	}
+  	$hide++;
+  }
+  echo "Total: ".getHandTotal($hand)."\n";
 }
 // build the deck of cards
 $deck = buildDeck($suits, $cards);
+echo "shuffled deck: \n";
 print_r($deck);
 // initialize a dealer and player hand
 $dealer = [];
