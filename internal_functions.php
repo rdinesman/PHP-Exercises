@@ -2,7 +2,7 @@
 
 $nothing = null;
 $something = '';
-$array = array(1, 2, 3);
+$array = array(7, 8, 9);
 
 // Create a function that checks if a variable is set or empty, and display "$variable_name is SET|EMPTY"
 function setOrEmpty($inp){
@@ -30,3 +30,8 @@ echo "nothing: ".$nothing."\n";
 echo "\$nothing is ".setOrEmpty($nothing)."\n";
 echo "something: ".$something."\n";
 echo "\$something is ".setOrEmpty($something)."\n";
+
+$array = serialize($array);
+echo $array;
+$array = unserialize($array);
+print_r($array);
