@@ -1,32 +1,27 @@
 <?php
 // complete all "todo"s to build a blackjack game
 // create an array for suits
-$suits = ['C', 'H', 'S', 'D'];
+$suits = ['♣', '♥', '♠', '♦'];
 // create an array for cards
 $cards = ['A', '2', '3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K'];
-// build a deck (array) of cards
-// card values should be "VALUE SUIT". ex: "7 H"
-// make sure to shuffle the deck before returning it
+
 function buildDeck($suits, $cards) {
-  $deck = [];
-  $deck_shuffled = [];
+	// build a deck (array) of cards
+	// card values should be "VALUE SUIT". ex: "7 H"
+	// make sure to shuffle the deck before returning it
+  $newDeck = [];
   foreach($suits as $s){
   	foreach($cards as $c){
-  		$deck[count($deck)] = $c.$s;
+  		array_push($newDeck, [$c, $s]);
   	}
   }
-  $count = count($deck) - 1;
-  while ($count > 0){
-  	$rand = rand(0, $count);
-  	$deck_shuffled[count($deck_shuffled)] = $deck[$rand];
-  	array_splice($deck, 1, 1);
-  	$count--;
-  }
-  return $deck_shuffled;
+  shuffle($newDeck);
+  return $newDeck;
 }
-// determine if a card is an ace
-// return true for ace, false for anything else
+
 function cardIsAce($card) {
+	// determine if a card is an ace
+	// return true for ace, false for anything else
   if ($card[1] == 'A'){
   	return true;
   }
@@ -34,11 +29,12 @@ function cardIsAce($card) {
   	return false;
   }
 }
-// determine the value of an individual card (string)
-// aces are worth 11
-// face cards are worth 10
-// numeric cards are worth their value
+
 function getCardValue($card) {
+	// determine the value of an individual card (string)
+	// aces are worth 11
+	// face cards are worth 10
+	// numeric cards are worth their value
   $val = $card[0];
   if (is_numeric($val)){
   	return (int)$val;
@@ -50,10 +46,11 @@ function getCardValue($card) {
   	return 11;
   }
 }
-// get total value for a hand of cards
-// don't forget to factor in aces
-// aces can be 1 or 11 (make them 1 if total value is over 21)
+
 function getHandTotal($hand) {
+	// get total value for a hand of cards
+	// don't forget to factor in aces
+	// aces can be 1 or 11 (make them 1 if total value is over 21)
 	$tot = 0;
 	$numAces = 0;
   foreach($hand as $card){
@@ -73,61 +70,213 @@ function getHandTotal($hand) {
   	return $tot;
   }
 }
-// draw a card from the deck into a hand
-// pass by reference (both hand and deck passed in are modified)
+
 function drawCard(&$hand, &$deck) {
- 	$hand[count($hand)] = $deck[0];
- 	array_splice($deck, -1, 0);
+	// draw a card from the deck into a hand
+	// pass by reference (both hand and deck passed in are modified)
+ 	array_push($hand, $deck[0]);
+ 	array_shift($deck);
 }
-// print out a hand of cards
-// name is the name of the player
-// hidden is to initially show only first card of hand (for dealer)
-// output should look like this:
-// Dealer: [4 C] [???] Total: ???
-// or:
-// Player: [J D] [2 D] Total: 12
+
 function echoHand($hand, $name, $hidden = false) {
+	// print out a hand of cards
+	// name is the name of the player
+	// hidden is to initially show only first card of hand (for dealer)
+	// output should look like this:
+	// Dealer: [4 C] [???] Total: ???
+	// or:
+	// Player: [J D] [2 D] Total: 12
 	$hide = 0;
-	echo "{$name}: ";
+	$resp = "$name: ";
   foreach ($hand as $card) {
-  	$cardStr = "[{$card[0]} {$card[1]}] ";
+  	$cardStr = "[$card[0] $card[1]] ";
+  	// echo $cardStr."\n";
   	if ($hidden && $hide != 0){
-  		echo $cardStr;
+  		$resp = $resp."[???] ";
   	}
   	else{
-  		echo "[???] ";
+  		$resp = $resp.$cardStr;
+  		if ($hidden){
+  			$hide = 1;
+  		}
   	}
-  	$hide++;
   }
-  echo "Total: ".getHandTotal($hand)."\n";
+  if (!$hidden)
+  	return $resp."Total: ".getHandTotal($hand);
+  else 
+  	return $resp;
 }
-// build the deck of cards
-$deck = buildDeck($suits, $cards);
-echo "shuffled deck: \n";
-print_r($deck);
-// initialize a dealer and player hand
-$dealer = [];
-$player = [];
-// dealer and player each draw two cards
-// todo
-// echo the dealer hand, only showing the first card
-// todo
-// echo the player hand
-// todo
-// allow player to "(H)it or (S)tay?" till they bust (exceed 21) or stay
-// while (false) {
-//   // todo
-// 	$todo = false;
-// }
-// show the dealer's hand (all cards)
-// todo
-// todo (all comments below)
-// at this point, if the player has more than 21, tell them they busted
-// otherwise, if they have 21, tell them they won (regardless of dealer hand)
-// if neither of the above are true, then the dealer needs to draw more cards
-// dealer draws until their hand has a value of at least 17
-// show the dealer hand each time they draw a card
-// finally, we can check and see who won
-// by this point, if dealer has busted, then player automatically wins
-// if player and dealer tie, it is a "push"
-// if dealer has more than player, dealer wins, otherwise, player wins
+
+function printline($interior = ""){
+	$line = "";
+	if ($interior == "border"){
+		for ($i = 0; $i < 86; $i++){
+			echo "~";
+		}
+		echo "\n";
+	}
+	else{
+		$mid = 84 - count($interior);
+		$line = $line."~";
+		for ($i = 0; $i < $mid/3; $i++){
+			$line = $line." ";
+		}
+		$line = $line.$interior;
+		for ($i = 0; $i < $mid/3; $i++){
+			$line = $line." ";
+		}
+		echo $line."~\n";
+	}
+}
+
+function printTable($dealerHand, $playerHand, $dealerHide = true){
+	printline("border");
+
+	printline(echoHand($dealerHand, "Dealer", $dealerHide));
+
+	for($i = 0; $i < 21; $i++){
+		printline();
+	}
+	printline(echoHand($playerHand, "Player"));
+
+	printline("border");
+}
+
+function turns(&$turns, &$deck){
+	if (getHandTotal($turns["Dealer"]) == 21){
+		printTable($turns["Dealer"], $turns["Player 1"]);
+	}
+	else{
+		$numPlayers = count($turns)-1;
+		for($i = 1; $i <= $numPlayers; $i++){
+			do{
+				$done = false;
+				$resp;
+				// If a player is dealt a blackjack, notify them.
+				if (getHandTotal($turns["Player $i"]) == 21 && count($turns["Player $i"]) == 2){
+						printTable($turns["Dealer"], $turns["Player 1"]);
+						echo "Blackjack! Hit enter to continue. ";
+						fgets(STDIN);
+						$done = true;
+					}
+				else{
+					do{
+						printTable($turns["Dealer"], $turns["Player 1"]);
+						echo "Player $i, would you like to hit, or stay? ";
+						$resp = strtolower(trim(fgets(STDIN)));
+					}
+					while ($resp != 'h' && $resp != 's' && $resp != 'hit' && $resp != 'stay');
+					if ($resp == 'stay' || $resp == 's'){
+						$done = true;
+					}
+					else{
+						drawCard($turns["Player $i"], $deck);
+						printTable($turns["Dealer"], $turns["Player 1"]);
+						if (getHandTotal($turns["Player $i"]) > 21){
+							echo "You busted. Hit enter to continue. ";
+							fgets(STDIN);
+							$done = true;
+						}
+					}
+				}
+			}
+			while(!$done);
+		}
+
+		do{
+			$done = false;
+			printTable($turns["Dealer"], $turns["Player 1"], false);
+			if (getHandTotal($turns["Dealer"]) >= 16){
+				$done = true;
+				if (getHandTotal($turns["Dealer"]) > 21){
+					echo "The Dealer busted!\n";
+				}
+			}
+			else{
+				echo "Dealer drawing...";
+				drawCard($turns["Dealer"], $deck);
+				sleep(1);
+			}
+
+		}
+		while(!$done);
+	}
+}
+
+function findWinner($players){
+	$results = [];
+	$dealer = getHandTotal($players["Dealer"]);
+	for ($i = 1; $i <= count($players) -1; $i++){
+		$playerTot = getHandTotal($players["Player $i"]);
+		if ($playerTot > $dealer && $playerTot < 22){
+			$results ["Player $i"] = "won";
+		}
+		else if ($playerTot > 21 || $playerTot < $dealer){
+			$results ["Player $i"] = "lost";
+		}
+		else
+			$results["Player $i"] = "pushed";
+	}
+	return $results;
+}
+
+function checkBlackJack(){
+	$dealerBJ = false;
+	foreach ($turn as $key => $val){
+		if (getHandTotal($val) == 21){
+			$printTable($turn["Dealer"], $turn["Player 1"]);
+			echo "$key, you have a blackjack! Hit enter to continue. ";
+			fgets(STDIN);
+			if ($key == "Dealer"){
+				$dealerBJ = true;
+			}
+		}
+	}
+	return $dealerBJ;
+}
+
+function printResults($results){
+	echo "Player 1 {$results['Player 1']}";
+	if (count($results) >= 3){
+		for ($i = 2; $i <= count($results); $i++){
+			echo ", Player $i {$results['Player $i']}";
+		}
+	}
+	echo ". ";
+}
+
+do{
+
+	$dealer = [];
+	$player = [];
+	$deck = buildDeck($suits, $cards);
+
+	
+
+	drawCard($player, $deck);
+	drawCard($dealer, $deck);
+
+	drawCard($player, $deck);
+	drawCard($dealer, $deck);	
+
+	$turn = ["Player 1" => $player, "Dealer" => $dealer];
+	$play = false;
+
+	
+	if (checkBlackJack()){
+		$printTable($turn["Dealer"], $turn["Player 1"]);
+		echo "Dealer had blackjack.";
+	}
+	else
+		turns($turn, $deck);
+	printResults(findWinner($turn));
+	echo "Would you like to play again? ";
+	$resp = strtoupper(trim(fgets(STDIN)));
+	if ($resp == 'Y' || $resp == 'YES'){
+		$play = true;
+	}
+	else{
+		$play = false;
+	}
+}
+while($play);
