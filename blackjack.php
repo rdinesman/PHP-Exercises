@@ -78,7 +78,7 @@ function drawCard(&$hand, &$deck) {
  	array_shift($deck);
 }
 
-function echoHand($hand, $name, $hidden = false) {
+function echoHand($hand, $name, $hidden = false, $line = 0) {
 	// print out a hand of cards
 	// name is the name of the player
 	// hidden is to initially show only first card of hand (for dealer)
@@ -86,21 +86,100 @@ function echoHand($hand, $name, $hidden = false) {
 	// Dealer: [4 C] [???] Total: ???
 	// or:
 	// Player: [J D] [2 D] Total: 12
+
 	$hide = 0;
-	$resp = "$name: ";
-  foreach ($hand as $card) {
-  	$cardStr = "[$card[0] $card[1]] ";
-  	// echo $cardStr."\n";
-  	if ($hidden && $hide != 0){
-  		$resp = $resp."[???] ";
-  	}
-  	else{
-  		$resp = $resp.$cardStr;
-  		if ($hidden){
-  			$hide = 1;
-  		}
-  	}
-  }
+	echo "$name: \n";
+  	foreach ($hand as $card) {
+	  	switch ($line){
+	  		case(0):
+	  			echo " ____  ";
+	  			break;
+		  	case(1):
+			  	if ($card[0 == 10])
+			  		echo "|{$card[0]} {$card[1]}  | ";
+			  	else
+			  		echo "|{$card[0]}    | ";
+		  		break;
+		  	case(2):
+		  		if ($card[0] == 2){
+		  			echo "|  {$card[1]}  | ";
+		  		}
+		  		elseif ($card[0 < 8]){
+			  		echo "| {$card[1]} {$card[1]} | ";
+			  	}
+			  	elseif ($card[0] == 8 || $card[0] == 9 || $card[0] == 10){
+			  		echo "|{$card[1]} {$card[1]} {$card[1]}| ";
+			  	}
+			  	elseif ($card[0] == 'J') {
+			  		# code...
+			  	}
+			  	elseif ($card[0] == 'Q') {
+			  		# code...
+			  	}
+			  	elseif ($card[0] == 'K') {
+			  		# code...
+			  	}
+			  	elseif ($card[0] == 'A') {
+			  		# code...
+			  	}
+		  		break;
+		  	case(3):
+		  		if ($card[0] < 5){
+		  			echo "|     |";
+		  		}
+		  		elseif ($card[0] == 5){
+		  			echo "|  {$card[1]}  | ";
+		  		}
+		  		elseif ($card[0] == 6 || $card[0] == 8){
+			  		echo "| {$card[1]} {$card[1]} | ";
+			  	}
+			  	elseif ($card[0] == 7 || $card[0] == 9 || $card[0] == 10){
+			  		echo "|{$card[1]} {$card[1]} {$card[1]}| ";
+			  	}
+			  	elseif ($card[0] == 'J') {
+			  		# code...
+			  	}
+			  	elseif ($card[0] == 'Q') {
+			  		# code...
+			  	}
+			  	elseif ($card[0] == 'K') {
+			  		# code...
+			  	}
+			  	elseif ($card[0] == 'A') {
+			  		# code...
+			  	}
+		  		break;
+		  	case(4):
+		  		if ($card[0] < 4){
+		  			echo "|  {$card[1]}  | ";
+		  		}
+		  		elseif ($card[0 < 8]){
+			  		echo "| {$card[1]} {$card[1]} | ";
+			  	}
+			  	elseif ($card[0] == 8 || $card[0] == 9 || $card[0] == 10){
+			  		echo "|{$card[1]} {$card[1]} {$card[1]}| ";
+			  	}
+			  	elseif ($card[0] == 'J') {
+			  		# code...
+			  	}
+			  	elseif ($card[0] == 'Q') {
+			  		# code...
+			  	}
+			  	elseif ($card[0] == 'K') {
+			  		# code...
+			  	}
+			  	elseif ($card[0] == 'A') {
+			  		# code...
+			  	}
+		  		break;
+		  	case(5):
+	  			echo "|    {$card[0]}| ";
+		  		break;
+		  	default:
+	  			echo " ____  ";
+		  		break;
+		}
+  	}	
   if (!$hidden)
   	return $resp."Total: ".getHandTotal($hand);
   else 
