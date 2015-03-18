@@ -10,4 +10,4 @@ Employee Number, First Name, Last Name, Sales Units
 4, Jeannette, Jeanson, 4
 5, Charles, Xavier, 2
 6, Chet, Chedderson, 8
-7, Chaiam, Chaiamson, 12
+7, Chaiam, Chaiamson, 128, Ryan, Dinesman, 200
