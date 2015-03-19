@@ -152,7 +152,7 @@
 					  	elseif ($card[0] == 2){
 				  			echo "|  {$card[1]}  | ";
 				  		}
-				  		elseif ($card[0 < 8]){
+				  		elseif ($card[0] < 8){
 					  		echo "| {$card[1]} {$card[1]} | ";
 					  	}
 					  	elseif ($card[0] == 8 || $card[0] == 9 || $card[0] == 10){
@@ -239,7 +239,7 @@
 					  	elseif ($card[0] < 4){
 				  			echo "|  {$card[1]}  | ";
 				  		}
-				  		elseif ($card[0 < 8]){
+				  		elseif ($card[0] < 8){
 					  		echo "| {$card[1]} {$card[1]} | ";
 					  	}
 					  	elseif ($card[0] == 8 || $card[0] == 9 || $card[0] == 10){
