@@ -1,3 +1,3 @@
-#CodeUp Exercises
+#CodeUp PHP Exercises
 
-What Awesome Work!
+This repository contains my initial PHP exercises from CodeUP.

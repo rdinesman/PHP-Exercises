@@ -1,0 +1,2 @@
+18:41:02 Info Log class is working.
+19:17:07 update Now added constructor.
